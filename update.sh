@@ -5,6 +5,19 @@ UNAMEOUT="$(uname -s)"
 APP_DIRECTORY=$(dirname "$(readlink -f "$0")")
 MACHINE_NAME=$(hostname)
 
+# Are you root?
+if [[ ${UID} != 0 ]]; then
+
+    echo "This script must be run as root or with sudo permissions. Please run using sudo."
+    exit 1
+fi
+
+if [ ! -f .env ]; then
+
+    echo "The .env file does not exists. Please copy .env.dist to .env."
+    exit 1
+fi
+
 # Load functions and env
 source .env
 source functions/log.sh
@@ -12,19 +25,6 @@ source functions/updater.sh
 source functions/slack.sh
 source functions/maintenance.sh
 source functions/hetrixtools.sh
-
-# Are you root?
-if [[ ${UID} != 0 ]]; then
-
-    log_error "This script must be run as root or with sudo permissions. Please run using sudo."
-    exit 1
-fi
-
-if [ ! -f .env ]; then
-
-    log_error "The .env file does not exists. Please copy .env.dist to .env."
-    exit 1
-fi
 
 if [ -f .maintenance ]; then
 
