@@ -34,7 +34,6 @@ if [ -f .maintenance ]; then
     exit 1
 fi
 
-
 # Starting message
 log_start "Starting update script as \"$USERNAME\" on the host: \"$MACHINE_NAME\""
 
@@ -44,3 +43,5 @@ update_packages
 clean_up
 
 log_done
+
+reboot

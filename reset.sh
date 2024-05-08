@@ -34,7 +34,6 @@ if [ ! -f .maintenance ]; then
     exit 1
 fi
 
-
 # Starting message
 log_start "Reset update script as \"$USERNAME\" on the host: \"$MACHINE_NAME\""
 
