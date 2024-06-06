@@ -53,6 +53,8 @@ To schedule the `update.sh` script to run every Monday at 7:00 AM, follow these 
 
 1. Open your terminal.
 
+TODO: Update the /etc/cron.d and service
+
 2. Edit your crontab file by running:
 
    ```
