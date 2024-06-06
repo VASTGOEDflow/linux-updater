@@ -90,7 +90,7 @@ To execute a shell script with sudo privileges after reboot using systemd, follo
 
    [Service]
    Type=simple
-   ExecStart=sudo /opt/linux-updater/reset.sh
+   ExecStart=cd /opt/linux-updater && /opt/linux-updater/reset.sh
 
    [Install]
    WantedBy=multi-user.target
