@@ -26,7 +26,7 @@ source functions/slack.sh
 source functions/maintenance.sh
 source functions/hetrixtools.sh
 
-if [ ! -f .maintenance ]; then
+if [ ! -f $APP_DIRECTORY"/.maintenance" ]; then
 
     slack_message $SLACK_CHANNEL "Tried to execute reset.sh when maintenance is not started on host \"$MACHINE_NAME\""
 

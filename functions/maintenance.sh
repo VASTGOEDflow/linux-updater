@@ -9,7 +9,7 @@ function enable_maintenance_mode() {
 
   slack_message $SLACK_CHANNEL "Starting maintenance on the host \"$MACHINE_NAME\""
 
-  touch .maintenance
+  touch $APP_DIRECTORY"/.maintenance"
 }
 
 # Function to disable maintenance mode
@@ -26,7 +26,7 @@ function disable_maintenance_mode() {
   
   slack_message $SLACK_CHANNEL "Stopping maintenance on the host \"$MACHINE_NAME\""
 
-  rm .maintenance
+  rm $APP_DIRECTORY"/.maintenance"
   rm -r $APP_DIRECTORY"/logs"
   rm $APP_DIRECTORY"/logs.zip"
 }
