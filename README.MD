@@ -53,70 +53,22 @@ To schedule the `update.sh` script to run every Monday at 7:00 AM, follow these 
 
 1. Open your terminal.
 
-TODO: Update the /etc/cron.d and service
-
 2. Edit your crontab file by running:
 
    ```
-   sudo crontab -e
+   sudo nano /etc/cron.d/linux-updater
    ```
 
 3. Add a new line at the end of the file with the following cron expression:
 
    ```
-   0 7 * * 1 /opt/linux-updater/update.sh
+   00 7 * * 1 root cd /opt/linux-updater/ && ./update.sh >/dev/null 2>&1
+   @reboot root cd /opt/linux-updater/ && ./reset.sh >/dev/null 2>&1
    ```
 
    This cron expression represents "0 minutes, 7 hours, every Monday".
 
-4. Save and exit the crontab editor.
-
-#### 2. Reset Script after Reboot
-
-To execute a shell script with sudo privileges after reboot using systemd, follow these steps:
-
-1. Create a systemd service unit file. For example, let's name it `maintenance-reset.service`:
-
-   ```
-   sudo nano /etc/systemd/system/maintenance-reset.service
-   ```
-
-2. Add the following content to the `maintenance-reset.service` file:
-
-   ```
-   [Unit]
-   Description=Reset maintenance
-   After=network.target
-
-   [Service]
-   Type=simple
-   ExecStart=cd /opt/linux-updater && /opt/linux-updater/reset.sh
-
-   [Install]
-   WantedBy=multi-user.target
-   ```
-
-3. Save and close the file.
-
-4. Reload systemd to update changes:
-
-   ```
-   sudo systemctl daemon-reload
-   ```
-
-5. Enable the service to start at boot:
-
-   ```
-   sudo systemctl enable maintenance-reset.service
-   ```
-
-6. Reboot your system to apply changes:
-
-   ```
-   sudo reboot
-   ```
-
-This will execute your shell script with sudo privileges after the system reboots. Ensure that your script and any actions it performs are safe and secure, as they will run with elevated privileges.
+4. Save and exit the editor.
 
 ## Usage
 

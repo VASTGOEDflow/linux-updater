@@ -44,4 +44,4 @@ clean_up
 
 log_done
 
-reboot
+/sbin/shutdown -r now
