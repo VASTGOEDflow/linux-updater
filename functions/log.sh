@@ -1,7 +1,7 @@
 LOGS_DIR="logs/"
 LOG_FILE="${LOGS_DIR}$(date "+%Y-%m-%d").log"
 
-FUNCTION_NAME="Logger"
+LOGGER_FUNCTION_NAME="Logger"
 
 function log_init {
 
@@ -11,9 +11,9 @@ function log_init {
     fi
 
     if [ ! -f "$LOG_FILE" ]; then
-        log_info $FUNCTION_NAME "Log file created: $LOG_FILE"
+        log_info $LOGGER_FUNCTION_NAME "Log file created: $LOG_FILE"
     else
-        log_info $FUNCTION_NAME "Log file already exists: $LOG_FILE"
+        log_info $LOGGER_FUNCTION_NAME "Log file already exists: $LOG_FILE"
     fi
 }
 
