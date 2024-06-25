@@ -16,8 +16,6 @@ function enable_maintenance_mode() {
 function disable_maintenance_mode() {
 
   disable_hetrix_maintenance_mode
-  
-  slack_message $MAINTENANCE_FUNCTION_NAME "Stopping maintenance on the host \"$MACHINE_NAME\""
 
   if ! command -v zip &> /dev/null; then
       log_error $FUNCTION_NAME "Please install zip first (apt install zip)..."
@@ -25,6 +23,8 @@ function disable_maintenance_mode() {
   else
     zip -rj $APP_DIRECTORY"/logs.zip" $APP_DIRECTORY"/logs" >/dev/null 2>&1 </dev/null >> logs/zip.txt
   fi
+
+  slack_message $MAINTENANCE_FUNCTION_NAME "Stopping maintenance on the host \"$MACHINE_NAME\""
 
   rm $APP_DIRECTORY"/.maintenance"
   rm -r $APP_DIRECTORY"/logs"
