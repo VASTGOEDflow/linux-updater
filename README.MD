@@ -33,15 +33,7 @@ Copy the provided `.env.dist` file to `.env`.
 
 Edit the `.env` file to specify your wishes.
 
-4. **Set Permissions**: 
-
-Make the script executable and ensure it has proper permissions.
-
-    chmod +x update.sh
-    chmod +x reset.sh
-
-
-5. **Make a cron**:
+4. **Make a cron**:
 
 To automate the update process on your Ubuntu-based Linux distribution, you can schedule the Linux Updater Tool to run at specified intervals using a cron job.
 
