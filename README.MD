@@ -21,7 +21,7 @@ The Linux Updater Tool is a script designed for updating Ubuntu-based Linux dist
 
 Clone the repository to your local machine or server.
 
-    git clone https://github.com/vastgoedflow/linux-updater.git
+    git clone https://github.com/vastgoedflow/linux-updater.git /opt/linux-updater
 
 2. **Copy Configuration File**: 
 
