@@ -39,11 +39,15 @@ log_start "Starting update script as \"$USERNAME\" on the host: \"$MACHINE_NAME\
 
 enable_maintenance_mode
 
+source functions/before.sh
+
 update_packages
 clean_up
+
+source functions/after.sh
 
 log_done
 
 slack_message $SLACK_CHANNEL "Rebooting \"$MACHINE_NAME\""
 
-/sbin/shutdown -r now
+#/sbin/shutdown -r now

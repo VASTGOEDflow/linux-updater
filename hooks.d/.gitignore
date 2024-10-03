@@ -1,0 +1,3 @@
+# ignore befofre and after hooks
+/after
+/before
