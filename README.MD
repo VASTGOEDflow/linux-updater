@@ -17,23 +17,27 @@ The Linux Updater Tool is a script designed for updating Ubuntu-based Linux dist
 
 ## Installation
 
-1. **Clone the Repository**: 
+**1. Clone the Repository**: 
 
 Clone the repository to your local machine or server.
 
     git clone https://github.com/vastgoedflow/linux-updater.git /opt/linux-updater
 
-2. **Copy Configuration File**: 
+**2. Copy Configuration File**: 
 
 Copy the provided `.env.dist` file to `.env`.
 
     cp .env.dist .env
 
-3. **Edit Configuration**: 
+**3. Edit Configuration**: 
 
 Edit the `.env` file to specify your wishes.
 
-4. **Make a cron**:
+**4. Make some scripts for hooks before and after**:
+
+The hooks will be automatically executed before and after the update process. You can create your own scripts and place them in the `hooks.d` directory in the subfolder `before` and `after`.
+
+**5. Make a cron**:
 
 To automate the update process on your Ubuntu-based Linux distribution, you can schedule the Linux Updater Tool to run at specified intervals using a cron job.
 
@@ -54,7 +58,7 @@ To schedule the `update.sh` script to run every Monday at 7:00 AM, follow these 
 3. Add a new line at the end of the file with the following cron expression:
 
    ```
-   00 7 * * 1 root cd /opt/linux-updater/ && ./update.sh >/dev/null 2>&1
+   0 7 * * 1 root cd /opt/linux-updater/ && ./update.sh >/dev/null 2>&1
    @reboot root cd /opt/linux-updater/ && ./reset.sh >/dev/null 2>&1
    ```
 
