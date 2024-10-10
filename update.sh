@@ -50,4 +50,4 @@ log_done
 
 slack_message $SLACK_CHANNEL "Rebooting \"$MACHINE_NAME\""
 
-#/sbin/shutdown -r now
+/sbin/shutdown -r now
