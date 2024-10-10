@@ -1,3 +1,7 @@
-# ignore befofre and after hooks
-/after
-/before
+# exclude everything inside before and after
+before/*
+after/*
+
+# but i want to keep the folder
+!before/.gitkeep
+!after/.gitkeep
