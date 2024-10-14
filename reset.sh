@@ -38,6 +38,6 @@ fi
 log_start "Reset update script as \"$USERNAME\" on the host: \"$MACHINE_NAME\""
 
 # Wait for network and other is up.. Maybe make real network check?
-sleep 30
+sleep 90
 
 disable_maintenance_mode
