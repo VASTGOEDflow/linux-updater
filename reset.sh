@@ -37,7 +37,27 @@ fi
 # Starting message
 log_start "Reset update script as \"$USERNAME\" on the host: \"$MACHINE_NAME\""
 
-# Wait for network and other is up.. Maybe make real network check?
-sleep 90
+# Wait for network and other is up..
+for i in {1..10}; do
 
-disable_maintenance_mode
+  log_info "Update" "Checking network (attempt $i)..."
+
+    if ping -c 1 -W 2 8.8.8.8 1>/dev/null 2>&1; then
+
+      log_info "Update" "Network available, disable maintenance (attempts: $i)"
+
+      disable_maintenance_mode
+
+    exit 1
+
+  fi
+
+  log_error "Update" "No network (attempt $i), waiting 10 seconds..."
+
+  sleep 10
+
+done
+
+log_error "Update" "No network, aborting after $i attempts"
+
+exit 1
