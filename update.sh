@@ -57,7 +57,7 @@ if [[ "$HAS_ERROR" == 'true' ]]; then
   else
 
   slack_message "$SLACK_CHANNEL" "Rebooting \"$MACHINE_NAME\""
-  log_info  "Rebooting \"$MACHINE_NAME\""
+  log_info "Updater" "Rebooting \"$MACHINE_NAME\""
   log_done
 
   /sbin/shutdown -r now
