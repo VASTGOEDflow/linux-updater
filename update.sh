@@ -4,6 +4,7 @@ USERNAME=$(whoami)
 UNAMEOUT="$(uname -s)"
 APP_DIRECTORY=$(dirname "$(readlink -f "$0")")
 MACHINE_NAME=$(hostname)
+export HAS_ERROR=false
 
 # Are you root?
 if [[ ${UID} != 0 ]]; then
@@ -26,9 +27,9 @@ source functions/slack.sh
 source functions/maintenance.sh
 source functions/hetrixtools.sh
 
-if [ -f $APP_DIRECTORY"/.maintenance" ]; then
+if [ -f "$APP_DIRECTORY/.maintenance" ]; then
 
-    slack_message $SLACK_CHANNEL "Tried to execute update.sh when maintenance is already started on host \"$MACHINE_NAME\""
+    slack_message "$SLACK_CHANNEL" "Tried to execute update.sh when maintenance is already started on host \"$MACHINE_NAME\""
 
     log_error "Update" "The maintenance already started."
     exit 1
@@ -46,8 +47,19 @@ clean_up
 
 source functions/after.sh
 
-log_done
 
-slack_message $SLACK_CHANNEL "Rebooting \"$MACHINE_NAME\""
+if [[ "$HAS_ERROR" == 'true' ]]; then
 
-/sbin/shutdown -r now
+  slack_message "$SLACK_CHANNEL" "❌ACTION REQUIRED❌: Updater for \"$MACHINE_NAME\" had one or more errors."
+
+  log_done
+
+  else
+
+  slack_message "$SLACK_CHANNEL" "Rebooting \"$MACHINE_NAME\""
+  log_info  "Rebooting \"$MACHINE_NAME\""
+  log_done
+
+  /sbin/shutdown -r now
+
+fi

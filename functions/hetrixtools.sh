@@ -6,7 +6,7 @@ HETRIXTOOLS_FUNCTION_NAME="Hetrixools"
 function enable_hetrix_maintenance_mode() {
 
   if [ -z "$HETRIX_API_KEY" ]; then
-    log_warning $HETRIXTOOLS_FUNCTION_NAME "There is no Hetrix API key in the .env"
+    log_warn $HETRIXTOOLS_FUNCTION_NAME "There is no Hetrix API key in the .env"
   else
     log_info $HETRIXTOOLS_FUNCTION_NAME "Try to set Hetrixtools monitor in maintenance..."
 
@@ -30,7 +30,7 @@ function enable_hetrix_maintenance_mode() {
 function disable_hetrix_maintenance_mode() {
 
   if [ -z "$HETRIX_API_KEY" ]; then
-    log_warning $HETRIXTOOLS_FUNCTION_NAME "There is no Hetrix API key in the .env"
+    log_warn $HETRIXTOOLS_FUNCTION_NAME "There is no Hetrix API key in the .env"
   else
     log_info $HETRIXTOOLS_FUNCTION_NAME "Try to turn off maintenance in Hetrixtools monitor ..."
 

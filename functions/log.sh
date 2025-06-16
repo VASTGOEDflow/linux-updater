@@ -49,6 +49,8 @@ function log_error {
   if [[ "$LOG_LEVEL" =~ ^(DEBUG|INFO|WARN|ERROR)$ ]]; then
     log_output "❌ ERROR | $1 | $2"
   fi
+
+  export HAS_ERROR=true
 }
 
 function log_start {
@@ -58,7 +60,13 @@ function log_start {
 
 function log_done {
 
-  log_output "🏖️ END"
+  if [[ "$HAS_ERROR" == 'true' ]]; then
+    local TEXT="🏖️ END (with 1 or more errors)"
+  else
+    local TEXT="🏖️ END"
+  fi
+
+  log_output "$TEXT"
 }
 
 log_init
