@@ -2,77 +2,63 @@
 
 UPDATER_FUNCTION_NAME="Updater"
 
-# Note: When executing the update or upgrade the logs are located in: /var/log/apt
-# Thats why I just throw it inside a black-hole.
+# Note: When executing apt the detailed logs are also located in: /var/log/apt
+# Per-command output is captured under $APP_DIRECTORY/logs/ for the Slack zip.
 
-# Function to update packages
 function update_packages() {
 
-  log_info $UPDATER_FUNCTION_NAME "Updating packages..."
+  local log_file="${APP_DIRECTORY}/logs/apt-update.txt"
 
-  # Hmm update dont give error when there is network error and can give sometimes warnings.
-  # Fetches you a list of packages for all of your repositories and PPA’s and make sure it is up to date
-  apt update >/dev/null 2>&1 </dev/null >> logs/apt-update.txt
+  log_info "$UPDATER_FUNCTION_NAME" "Updating packages..."
 
-  if [ $? -eq 0 ]; then
+  apt update >> "$log_file" 2>&1 </dev/null
 
-    log_info $UPDATER_FUNCTION_NAME "Update successful."
-    
-    upgrade_dist
+  # apt update does not reliably exit non-zero on network errors.
+  # Scan the captured output for the error patterns apt itself emits.
+  if grep -qE '^(Err:|E: |W: Failed to fetch)' "$log_file"; then
 
-  else 
-  
-    log_error $UPDATER_FUNCTION_NAME "Update not working."
+    log_error "$UPDATER_FUNCTION_NAME" "apt update reported errors (see $log_file)"
+    return
   fi
+
+  log_info "$UPDATER_FUNCTION_NAME" "Update successful."
+
+  upgrade_dist
 }
 
 function upgrade_dist() {
 
-    # Dist-upgrade in addition to performing the function of upgrade,
-    # also intelligently handles changing dependencies with new versions
-    # of packages; apt-get has a "smart" conflict resolution system, and
-    # it will attempt to upgrade the most important packages at the
-    # expense of less important ones if necessary. So, dist-upgrade
-    # command may remove some packages.
-    apt dist-upgrade -y >/dev/null 2>&1 </dev/null >> logs/apt-dist-upgrade.txt
-        
-    if [ $? -eq 0 ]; then
+  local log_file="${APP_DIRECTORY}/logs/apt-dist-upgrade.txt"
 
-        log_info $UPDATER_FUNCTION_NAME "Dist upgrade successful."
-       
-    else 
-    
-        log_error $UPDATER_FUNCTION_NAME "Dist upgrade not working."
-    fi
+  if apt dist-upgrade -y >> "$log_file" 2>&1 </dev/null; then
+
+    log_info "$UPDATER_FUNCTION_NAME" "Dist upgrade successful."
+  else
+
+    log_error "$UPDATER_FUNCTION_NAME" "Dist upgrade not working."
+  fi
 }
 
-# Function to clean up packages
 function clean_up() {
 
-  log_info $UPDATER_FUNCTION_NAME  "Cleaning up..."
+  local autoremove_log="${APP_DIRECTORY}/logs/apt-autoremove.txt"
+  local autoclean_log="${APP_DIRECTORY}/logs/apt-autoclean.txt"
 
-  # Autoremove is used to remove packages that were automatically installed to satisfy dependencies for other packages
-  # and are now no longer needed as dependencies changed or the package(s) needing them were removed in the meantime.
-  apt autoremove -y >/dev/null 2>&1 </dev/null >> logs/apt-autoremove.txt
+  log_info "$UPDATER_FUNCTION_NAME" "Cleaning up..."
 
-  if [ $? -eq 0 ]; then
+  if apt autoremove -y >> "$autoremove_log" 2>&1 </dev/null; then
 
-      log_info $UPDATER_FUNCTION_NAME "Autoremove successful."
-      
-  else 
-  
-      log_error $UPDATER_FUNCTION_NAME "Autoremove not working."
+    log_info "$UPDATER_FUNCTION_NAME" "Autoremove successful."
+  else
+
+    log_error "$UPDATER_FUNCTION_NAME" "Autoremove not working."
   fi
 
-  # Autoclean clears out the local repository of retrieved package files.
-  apt autoclean >/dev/null 2>&1 </dev/null >> logs/apt-autoclean.txt
-  
-  if [ $? -eq 0 ]; then
+  if apt autoclean >> "$autoclean_log" 2>&1 </dev/null; then
 
-      log_info $UPDATER_FUNCTION_NAME "Autoclean successful."
-      
-  else 
-  
-      log_error $UPDATER_FUNCTION_NAME "Autoclean not working."
+    log_info "$UPDATER_FUNCTION_NAME" "Autoclean successful."
+  else
+
+    log_error "$UPDATER_FUNCTION_NAME" "Autoclean not working."
   fi
 }
