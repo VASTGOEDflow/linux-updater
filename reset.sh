@@ -1,9 +1,12 @@
 #!/bin/bash
+set -uo pipefail
+
+APP_DIRECTORY=$(dirname "$(readlink -f "$0")")
+cd "$APP_DIRECTORY" || exit 1
 
 USERNAME=$(whoami)
-UNAMEOUT="$(uname -s)"
-APP_DIRECTORY=$(dirname "$(readlink -f "$0")")
 MACHINE_NAME=$(hostname)
+HAS_ERROR=false
 
 # Are you root?
 if [[ ${UID} != 0 ]]; then
@@ -12,26 +15,32 @@ if [[ ${UID} != 0 ]]; then
     exit 1
 fi
 
-if [ ! -f .env ]; then
+if [ ! -f "$APP_DIRECTORY/.env" ]; then
 
-    echo "The .env file does not exists. Please copy .env.dist to .env."
+    echo "The .env file does not exist. Please copy .env.dist to .env."
     exit 1
 fi
 
-# Load functions and env
-source .env
-source functions/log.sh
-source functions/updater.sh
-source functions/slack.sh
-source functions/maintenance.sh
-source functions/hetrixtools.sh
+source "$APP_DIRECTORY/.env"
 
-if [ ! -f $APP_DIRECTORY"/.maintenance" ]; then
+: "${LOG_LEVEL:=INFO}"
+: "${HETRIX_API_KEY:=}"
+: "${HETRIX_MONITOR_IDS:=}"
+: "${SLACK_TOKEN:=}"
+: "${SLACK_CHANNEL:=}"
 
-    slack_message $SLACK_CHANNEL "Tried to execute reset.sh when maintenance is not started on host \"$MACHINE_NAME\""
+source "$APP_DIRECTORY/functions/log.sh"
+source "$APP_DIRECTORY/functions/updater.sh"
+source "$APP_DIRECTORY/functions/slack.sh"
+source "$APP_DIRECTORY/functions/maintenance.sh"
+source "$APP_DIRECTORY/functions/hetrixtools.sh"
 
-    log_error "Update" "The maintenance is not started."
-    exit 1
+if [ ! -f "$APP_DIRECTORY/.maintenance" ]; then
+
+    # Normal boot that wasn't preceded by an update-triggered reboot.
+    # Nothing to reset — exit quietly without alerting Slack.
+    log_info "Update" "No .maintenance flag present, nothing to reset"
+    exit 0
 fi
 
 # Starting message
@@ -42,22 +51,24 @@ for i in {1..10}; do
 
   log_info "Update" "Checking network (attempt $i)..."
 
-    if ping -c 1 -W 2 8.8.8.8 1>/dev/null 2>&1; then
+  if ping -c 1 -W 2 8.8.8.8 1>/dev/null 2>&1; then
 
-      log_info "Update" "Network available, disable maintenance (attempts: $i)"
+    log_info "Update" "Network available (attempts: $i), waiting 90s for HetrixTools agent to report in..."
 
-      disable_maintenance_mode
+    sleep 90
 
-    exit 1
+    log_info "Update" "Disabling maintenance"
 
+    disable_maintenance_mode
+
+    exit 0
   fi
 
   log_error "Update" "No network (attempt $i), waiting 10 seconds..."
 
   sleep 10
-
 done
 
-log_error "Update" "No network, aborting after $i attempts"
+log_error "Update" "No network, aborting after 10 attempts"
 
 exit 1

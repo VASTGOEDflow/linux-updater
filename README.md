@@ -1,10 +1,10 @@
 # Linux Updater Tool
 
-The Linux Updater Tool is a script designed for updating Ubuntu-based Linux distributions. It not only handles the update process but also provides additional functionalities such as sending Slack messages, activating maintenance mode for HetrixTools, and logging for tracking purposes.
+The Linux Updater Tool is a script designed for updating apt-based Linux distributions (Debian, Ubuntu, derivatives). It not only handles the update process but also provides additional functionalities such as sending Slack messages, activating maintenance mode for HetrixTools, and logging for tracking purposes.
 
 ## Features
 
-- **Automatic updates**: Updates the Ubuntu-based Linux distribution to the latest available packages.
+- **Automatic updates**: Updates the apt-based Linux distribution to the latest available packages.
 - **Slack integration**: Sends a notification to a specified Slack channel after the update process is completed.
 - **HetrixTools integration**: Activates maintenance mode in HetrixTools to indicate that updates are being performed.
 - **Logging**: Logs the update process for monitoring and troubleshooting purposes.
@@ -13,7 +13,6 @@ The Linux Updater Tool is a script designed for updating Ubuntu-based Linux dist
 
 - **sudo**: Requires sudo privileges to execute system updates and other administrative tasks.
 - **curl**: The script utilizes curl for sending Slack messages and activating maintenance mode in HetrixTools.
-- **zip**: The zip utility is required for compressing logs into a zip file.
 
 ## Installation
 
@@ -39,7 +38,7 @@ The hooks will be automatically executed before and after the update process. Yo
 
 **5. Make a cron**:
 
-To automate the update process on your Ubuntu-based Linux distribution, you can schedule the Linux Updater Tool to run at specified intervals using a cron job.
+To automate the update process on your apt-based Linux distribution, you can schedule the Linux Updater Tool to run at specified intervals using a cron job.
 
 ### Setting up Cron Jobs
 

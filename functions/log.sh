@@ -1,5 +1,5 @@
-LOGS_DIR="logs/"
-LOG_FILE="${LOGS_DIR}$(date "+%Y-%m-%d").log"
+LOGS_DIR="${APP_DIRECTORY}/logs"
+LOG_FILE="${LOGS_DIR}/$(date "+%Y-%m-%d").log"
 
 LOGGER_FUNCTION_NAME="Logger"
 
@@ -7,20 +7,15 @@ function log_init {
 
     if [ ! -d "$LOGS_DIR" ]; then
         mkdir -p "$LOGS_DIR"
-        log_info "Logs directory created: $LOGS_DIR"
-    fi
-
-    if [ ! -f "$LOG_FILE" ]; then
-        log_info $LOGGER_FUNCTION_NAME "Log file created: $LOG_FILE"
-    else
-        log_info $LOGGER_FUNCTION_NAME "Log file already exists: $LOG_FILE"
     fi
 }
 
 function log_output {
 
-  echo `date "+%H:%M:%S"`" | $1"
-  echo `date "+%H:%M:%S"`" | $1" >> $LOG_FILE
+  local ts
+  ts=$(date "+%H:%M:%S")
+  echo "${ts} | $1"
+  echo "${ts} | $1" >> "$LOG_FILE"
 }
 
 function log_debug {
@@ -50,7 +45,7 @@ function log_error {
     log_output "❌ ERROR | $1 | $2"
   fi
 
-  export HAS_ERROR=true
+  HAS_ERROR=true
 }
 
 function log_start {

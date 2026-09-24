@@ -1,13 +1,12 @@
 #!/bin/bash
 
-UPDATER_FUNCTION_NAME="Before"
+AFTER_FUNCTION_NAME="After"
 
-for file in $(ls -v $APP_DIRECTORY"/hooks.d/before"); do
+for file in "$APP_DIRECTORY"/hooks.d/after/*; do
 
-    if [ -f $APP_DIRECTORY"/hooks.d/before/"$file ]; then
+    [ -f "$file" ] || continue
 
-        log_info $UPDATER_FUNCTION_NAME "Executing after hook: $file"
+    log_info "$AFTER_FUNCTION_NAME" "Executing after hook: $(basename "$file")"
 
-        source $APP_DIRECTORY"/hooks.d/before/"$file
-    fi
+    source "$file"
 done
