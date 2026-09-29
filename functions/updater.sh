@@ -11,7 +11,7 @@ function update_packages() {
 
   log_info "$UPDATER_FUNCTION_NAME" "Updating packages..."
 
-  apt update >> "$log_file" 2>&1 </dev/null
+  apt update > "$log_file" 2>&1 </dev/null
 
   # apt update does not reliably exit non-zero on network errors.
   # Scan the captured output for the error patterns apt itself emits.
